@@ -1,0 +1,13 @@
+﻿ATM prototype program.
+
+The ATM has two functions:
+— Сash deposit
+— Сash withdrawals
+
+You can choose the denomination of the bill to be issued.
+
+Also, for clarity, the ATM displays its status and its initial settings.
+
+If the ATM runs out of bills or filled, it will be unavailable.
+
+Enjoy!

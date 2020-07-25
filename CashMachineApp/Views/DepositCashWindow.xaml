@@ -1,0 +1,64 @@
+﻿<Window x:Class="CashMachineApp.Views.DepositCashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:local="clr-namespace:CashMachineApp.Views.Validation"
+        mc:Ignorable="d"
+        Title="DepositCashWindow"      
+        Height="200" Width="250"
+        MaxHeight="200" MinHeight="200"
+        MaxWidth="250" MinWidth="250">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--Заголовок-->
+        <TextBlock 
+            Style="{StaticResource ChildWindowTitleTextBlockStyle}"
+            Text="Deposit cash"/>
+
+        <StackPanel
+            Grid.Row="1">
+            <!--Заданная сумма внесения средств-->
+            <StackPanel
+                Orientation="Horizontal"
+                Margin="10 5 0 0">
+                <TextBlock
+                    Style="{StaticResource BaseTextBlockStyle}"
+                    VerticalAlignment="Center"
+                    Text="Enter the amount:"/>
+
+                <!--Текст бокс для ввода-->
+                <TextBox
+                    x:Name="DepositAmountTxtBx"
+                    Text="{Binding DepositAmount, Mode=TwoWay}"
+                    Style="{StaticResource BaseTextBoxStyle}">
+                    <i:Interaction.Behaviors>
+                        <local:TextBoxValidationBehavior/>
+                    </i:Interaction.Behaviors>
+                </TextBox>
+
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Style="{StaticResource BaseTextBlockStyle}"
+                    Text="p"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!--Кнопка внесения средств-->
+        <Button
+            Grid.Row="3"
+            Style="{StaticResource DepositButtonStyle}"
+            Content="Deposit"
+            Command="{Binding DepositCashCommand}">
+        </Button>
+    </Grid>
+</Window>
