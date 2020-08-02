@@ -1,4 +1,4 @@
-﻿namespace CashMachineApp.Interfaces
+﻿namespace CashMachineApp.Models.Abstractions
 {
     /// <summary>
     /// Интерфейс открытия файла с информацией

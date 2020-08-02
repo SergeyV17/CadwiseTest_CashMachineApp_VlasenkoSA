@@ -1,8 +1,7 @@
 ﻿using CashMachineApp.Commands;
-using CashMachineApp.Interfaces;
-using CashMachineApp.Models;
 using CashMachineApp.Views;
 using System.Windows.Input;
+using CashMachineApp.Models.Abstractions;
 
 namespace CashMachineApp.ViewModels
 {
@@ -14,7 +13,7 @@ namespace CashMachineApp.ViewModels
         readonly IDepositCashService depositCashService; // сервис внесения средств в банкомат
         readonly IMessageService messageService; // сервис вызывающий сообщения для пользователя
 
-        readonly CashMachine cashMachine; // банкомат
+        readonly ICashMachine cashMachine; // банкомат
         public DepositCashWindow DepositCashWindow { get; set; } // окно меню внесения средств
 
         /// <summary>
@@ -23,7 +22,7 @@ namespace CashMachineApp.ViewModels
         /// <param name="MessageService">сервис сообщений</param>
         /// <param name="DepositCashService">сервис внесения средств</param>
         /// <param name="CashMachine">банкомат</param>
-        public DepositCashViewModel(IMessageService MessageService, IDepositCashService DepositCashService, CashMachine CashMachine)
+        public DepositCashViewModel(IMessageService MessageService, IDepositCashService DepositCashService, ICashMachine CashMachine)
         {
             this.messageService = MessageService;
             this.depositCashService = DepositCashService;

@@ -1,8 +1,7 @@
 ﻿using CashMachineApp.Commands;
-using CashMachineApp.Interfaces;
-using CashMachineApp.Models;
 using CashMachineApp.Views;
 using System.Windows.Input;
+using CashMachineApp.Models.Abstractions;
 
 namespace CashMachineApp.ViewModels
 {
@@ -14,10 +13,8 @@ namespace CashMachineApp.ViewModels
         private readonly IWithdrawCashService withdrawCashService; // сервис взноса средств в банкомат
         private readonly IMessageService messageService; // сервис вызывающий сообщения для пользователя
 
-        readonly CashMachine cashMachine; // банкомат
+        readonly ICashMachine cashMachine; // банкомат
         public WithdrawCashWindow WithdrawCashWindow { get; set; } // окно выдачи средств
-
-        private int banknoteDenomination; // выбранный номинал для размена
 
         /// <summary>
         /// Конструктор модели представления для меню выдачи средств
@@ -25,7 +22,7 @@ namespace CashMachineApp.ViewModels
         /// <param name="MessageService">сервис сообщений</param>
         /// <param name="WithdrawCashService">сервис выдачи средств</param>
         /// <param name="CashMachine">банкомат</param>
-        public WithDrawCashViewModel(IMessageService MessageService, IWithdrawCashService WithdrawCashService, CashMachine CashMachine)
+        public WithDrawCashViewModel(IMessageService MessageService, IWithdrawCashService WithdrawCashService, ICashMachine CashMachine)
         {
             this.messageService = MessageService;
             this.withdrawCashService = WithdrawCashService;
@@ -62,16 +59,18 @@ namespace CashMachineApp.ViewModels
                             {
                                 messageService.ShowInfoMessage(WithdrawCashWindow, "Funds withdrawn successfully");
                                 WithdrawCashWindow.Close();
+
+                                cashMachine.ChangeWithdrawDenomination(0);
                             }
                         }
                         else
                         {
-                            bool checkForCorrectWithdraw = withdrawCashService.CheckForCorrectWithdraw(banknoteDenomination);
+                            bool checkForCorrectWithdraw = withdrawCashService.CheckForCorrectWithdraw(cashMachine.SelectedWithdrawDenomination);
 
                             // Проверка на корректную выдачу (заданная сумма должна быть кратна выбранному номиналу)
                             if (checkForCorrectWithdraw)
                             {
-                                bool notEnoughBanknotes = withdrawCashService.SelectedDenominationWithdraw(cashMachine, banknoteDenomination);
+                                bool notEnoughBanknotes = withdrawCashService.SelectedDenominationWithdraw(cashMachine, cashMachine.SelectedWithdrawDenomination);
 
                                 // Проверка на хранение в банкомате достаточно количества банкнот для выдачи
                                 if (notEnoughBanknotes)
@@ -80,10 +79,12 @@ namespace CashMachineApp.ViewModels
                                 {
                                     messageService.ShowInfoMessage(WithdrawCashWindow, "Funds withdrawn successfully");
                                     WithdrawCashWindow.Close();
+
+                                    cashMachine.ChangeWithdrawDenomination(0);
                                 }
                             }
                             else
-                                messageService.ShowErrorMessage(WithdrawCashWindow, $"The withdraw amount: {WithdrawAmount} cannot be dispensed by: {banknoteDenomination} p");
+                                messageService.ShowErrorMessage(WithdrawCashWindow, $"The withdraw amount: {WithdrawAmount} cannot be dispensed by: {cashMachine.SelectedWithdrawDenomination} p");
                         }
                     }
                     else
@@ -93,7 +94,7 @@ namespace CashMachineApp.ViewModels
         }
 
         /// <summary>
-        /// Команда установки номинала для размена
+        /// Команда установки номинала для выдачи
         /// </summary>
         private ICommand setDenominationCommand;
         public ICommand SetDenominationCommand
@@ -103,12 +104,12 @@ namespace CashMachineApp.ViewModels
                 return setDenominationCommand ??
                 (setDenominationCommand = new RelayCommand(obj =>
                 {
-                    bool parseResult = int.TryParse(obj.ToString(), out banknoteDenomination);
+                    bool parseResult = int.TryParse(obj.ToString(), out int selectedDenominaton);
 
                     if (!parseResult)
                         throw new System.Exception("Wrong denomination, check WithdrawCashWindow.xaml");
 
-                    cashMachine.IsDefaultWithdraw = false;
+                    cashMachine.ChangeWithdrawDenomination(selectedDenominaton);
                 }));
             }
         }

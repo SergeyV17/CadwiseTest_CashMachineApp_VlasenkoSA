@@ -1,8 +1,9 @@
-﻿using CashMachineApp.Interfaces;
-using CashMachineApp.Models.Factories;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using CashMachineApp.Models.Abstractions;
+using CashMachineApp.Models.Implementations.Factories;
 
-namespace CashMachineApp.Models
+namespace CashMachineApp.Models.Implementations
 {
     /// <summary>
     /// Класс реализации логики внесения средств
@@ -28,10 +29,10 @@ namespace CashMachineApp.Models
         /// </summary>
         /// <param name="cashMachine">банкомат</param>
         /// <returns>признак успешной операции</returns>
-        public bool DepositFundsToCashMachine(CashMachine cashMachine)
+        public bool DepositFundsToCashMachine(ICashMachine cashMachine)
         {
             // Временный список банкнот
-            List<Banknote> tempListOfBanknotes = BanknotesFactory.GetBanknotesByAmounOfCash(DepositAmount);
+            IList<Banknote> tempListOfBanknotes = BanknoteFactory.GetBanknotesByAmounOfCash(cashMachine.Banknotes.ToList(), DepositAmount, cashMachine.Banknotes.ToList());
 
             // Проверка: хватит ли места для банкнот в банкомате после внесения средств
             if (cashMachine.CurrentCountOfBanknotes + tempListOfBanknotes.Count > cashMachine.MaxCountOfBanknotes)

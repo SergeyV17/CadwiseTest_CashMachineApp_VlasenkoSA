@@ -1,6 +1,4 @@
-﻿using CashMachineApp.Models;
-
-namespace CashMachineApp.Interfaces
+﻿namespace CashMachineApp.Models.Abstractions
 {
     /// <summary>
     /// Интерфейс определяющий работу меню выдачи средств
@@ -14,8 +12,8 @@ namespace CashMachineApp.Interfaces
         bool CheckForCorrectWithdraw(int banknoteDenomination); 
         bool CheckForTrifles(string textBoxAmountValue); // // Метод проверяющий кратность заданной суммы 10 (проверка на мелочь)
 
-        bool DefaultWithdraw(CashMachine cashMachine); // Метод выдачи средств по умолчанию
+        bool DefaultWithdraw(ICashMachine cashMachine); // Метод выдачи средств по умолчанию
 
-        bool SelectedDenominationWithdraw(CashMachine cashMachine, int banknoteDenomination); // Метод выдачи средств с разменом по выбранному номиналу
+        bool SelectedDenominationWithdraw(ICashMachine cashMachine, int banknoteDenomination); // Метод выдачи средств с разменом по выбранному номиналу
     }
 }

@@ -22,7 +22,7 @@
         <Setter Property="Visibility" Value="Hidden"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=CashMachine.CurrentState}" Value="false">
+            <DataTrigger Binding="{Binding Path=CurrentState}" Value="false">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </Style.Triggers>

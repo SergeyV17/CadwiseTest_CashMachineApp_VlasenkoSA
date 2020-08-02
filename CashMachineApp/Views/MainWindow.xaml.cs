@@ -1,6 +1,7 @@
-﻿using CashMachineApp.Models;
-using CashMachineApp.ViewModels;
+﻿using CashMachineApp.ViewModels;
 using System.Windows;
+using CashMachineApp.Models.Implementations;
+
 
 namespace CashMachineApp
 {

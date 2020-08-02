@@ -92,7 +92,7 @@
                 <TextBlock
                     Text="{Binding 
                     StringFormat={}Status: {0}, 
-                    Path=CashMachine.CurrentState, 
+                    Path=CurrentState, 
                     Converter={StaticResource BooleanToStringConverter},
                     Mode=OneWay}"
                     Style="{StaticResource BaseTextBlockStyle}"/>
@@ -100,14 +100,14 @@
                 <TextBlock
                     Text="{Binding 
                     StringFormat={}Max count of banknotes: {0},
-                    Path=CashMachine.MaxCountOfBanknotes, 
+                    Path=MaxCountOfBanknotes, 
                     Mode=OneWay}"
                     Style="{StaticResource BaseTextBlockStyle}"/>
                 <!--Текущее количество банкнот-->
                 <TextBlock
                     Text="{Binding
                     StringFormat={}Current count of banknotes: {0}, 
-                    Path=CashMachine.CurrentCountOfBanknotes,
+                    Path=CurrentCountOfBanknotes,
                     Mode=OneWay,
                     UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource BaseTextBlockStyle}"/>

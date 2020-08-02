@@ -1,9 +1,9 @@
 ﻿using CashMachineApp.Commands;
-using CashMachineApp.Interfaces;
-using CashMachineApp.Models;
 using CashMachineApp.Views;
 using System;
 using System.Windows.Input;
+using CashMachineApp.Models.Abstractions;
+using CashMachineApp.Models.Implementations;
 
 namespace CashMachineApp.ViewModels
 {
@@ -16,7 +16,7 @@ namespace CashMachineApp.ViewModels
         readonly IInfoFileService infoFileService; // сервис работы с информационным файлом
 
         private readonly MainWindow mainWindow; // главное окно
-        public CashMachine CashMachine { get; set; } // банкомат
+        private readonly ICashMachine cashMachine; // банкомат
 
         public DepositCashViewModel depositCashViewModel { get; private set; } // модель представление для меню внесения средств
         public WithDrawCashViewModel withdrawCashViewModel { get; private set; } // модель представление для меню выдачи средств
@@ -36,11 +36,11 @@ namespace CashMachineApp.ViewModels
             this.infoFileService = InfoFileService;
             this.messageService = MessageService;
 
-            CashMachine = new CashMachine();
+            cashMachine = new CashMachine();
 
-            depositCashViewModel = new DepositCashViewModel(MessageService, DepositCashService, CashMachine );
-            withdrawCashViewModel = new WithDrawCashViewModel(MessageService, WithdrawCashService, CashMachine );
-        }
+            depositCashViewModel = new DepositCashViewModel(MessageService, DepositCashService, cashMachine );
+            withdrawCashViewModel = new WithDrawCashViewModel(MessageService, WithdrawCashService, cashMachine );
+        }   
 
         #region Команды меню программы
 
@@ -101,8 +101,9 @@ namespace CashMachineApp.ViewModels
                     depositCashViewModel.DepositCashWindow = depositCashWindow;
 
                     depositCashWindow.ShowDialog();
+                    StatusPropertyChanged();
                 },
-                (obj) => CashMachine.CurrentState));
+                (obj) => cashMachine.State));
             }
         }
 
@@ -120,12 +121,30 @@ namespace CashMachineApp.ViewModels
                     var withdrawCashWindow = new WithdrawCashWindow() { Owner = mainWindow, DataContext = withdrawCashViewModel };
 
                     withdrawCashViewModel.WithdrawCashWindow = withdrawCashWindow;
-                    CashMachine.IsDefaultWithdraw = true;
+                    //CashMachine.IsDefaultWithdraw = true;
 
                     withdrawCashWindow.ShowDialog();
+                    StatusPropertyChanged();
                 },
-                (obj) => CashMachine.CurrentState));
+                (obj) => cashMachine.State));
             }
+        }
+
+        #endregion
+
+        #region Статус банкомата
+
+        public bool CurrentState => cashMachine.State;
+        public int MaxCountOfBanknotes => cashMachine.MaxCountOfBanknotes;
+        public int CurrentCountOfBanknotes => cashMachine.CurrentCountOfBanknotes;
+
+        /// <summary>
+        /// Метод обновляющий UI при внесении или снятии средств
+        /// </summary>
+        private void StatusPropertyChanged()
+        {
+            OnPropertyChanged(nameof(CurrentState));
+            OnPropertyChanged(nameof(CurrentCountOfBanknotes));
         }
 
         #endregion

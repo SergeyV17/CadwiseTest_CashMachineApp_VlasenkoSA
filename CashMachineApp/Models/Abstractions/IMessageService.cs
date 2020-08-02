@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace CashMachineApp.Interfaces
+namespace CashMachineApp.Models.Abstractions
 {
     interface IMessageService
     {

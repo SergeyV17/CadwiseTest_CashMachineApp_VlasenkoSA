@@ -1,6 +1,4 @@
-﻿using CashMachineApp.Models;
-
-namespace CashMachineApp.Interfaces
+﻿namespace CashMachineApp.Models.Abstractions
 {
     /// <summary>
     /// Интерфейс определяющий работу меню внесения средств
@@ -9,6 +7,6 @@ namespace CashMachineApp.Interfaces
     {
         int DepositAmount { get; set; } // Заданная сумма выдачи
         bool CheckForTrifles(string textBoxAmountValue); // Метод проверяющий кратность заданной суммы 10 (проверка на мелочь)
-        bool DepositFundsToCashMachine(CashMachine cashMachine); // Метод добавления банкнот в банкомат
+        bool DepositFundsToCashMachine(ICashMachine cashMachine); // Метод добавления банкнот в банкомат
     }
 }

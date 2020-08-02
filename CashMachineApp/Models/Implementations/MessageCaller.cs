@@ -1,10 +1,10 @@
-﻿using CashMachineApp.Interfaces;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
+using CashMachineApp.Models.Abstractions;
 
-namespace CashMachineApp.Models
+namespace CashMachineApp.Models.Implementations
 {
-    class MessageCaller : IMessageService
+    public class MessageCaller : IMessageService
     {
         /// <summary>
         /// Метод вызывающий окно сообщения с информацией об ошибке

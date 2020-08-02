@@ -1,4 +1,4 @@
-﻿using CashMachineApp.Interfaces;
+using CashMachineApp.Interfaces;
 using CashMachineApp.Models.Factories;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,23 +12,23 @@ namespace CashMachineApp.Models
     class CashMachine : ICashMachine, INotifyPropertyChanged
     {
         private const int maxCountOfBanknotes = 2000; // максимальное количество хранимых банкнот
-        public List<Banknote> Banknotes { get; set; } // коллекция банкнот
 
-        public bool CurrentState => Banknotes.Count <= 0 || Banknotes.Count >= maxCountOfBanknotes ? false : true; // текущее состояние банкомата
+        private IList<Banknote> banknotes;    
+        public IReadOnlyList<Banknote> Banknotes => (IReadOnlyList<Banknote>)banknotes;// коллекция банкнот 
 
+        public bool CurrentState => banknotes.Count <= 0 || banknotes.Count >= maxCountOfBanknotes ? false : true; // текущее состояние банкомата
         public int MaxCountOfBanknotes => maxCountOfBanknotes;
-        public int CurrentCountOfBanknotes => Banknotes.Count; // текущее количество хранимых банкнот
-        public bool IsDefaultWithdraw { get; set; } // признак выдачи банкнот по умолчанию
-        public int SelectedWithdrawDenomination { get; set; } // выбранный номинал для выдачи банкнот
+        public int CurrentCountOfBanknotes => banknotes.Count; // текущее количество хранимых банкнот
+        public bool IsDefaultWithdraw => SelectedWithdrawDenomination != default;  // признак выдачи банкнот по умолчанию
+        public int SelectedWithdrawDenomination { get; private set; } // выбранный номинал для выдачи банкнот
 
         /// <summary>
         /// Конструктор банкомата
         /// </summary>
         public CashMachine()
         {
-            // заполнение банкомата через фабрику
-            Banknotes = BanknotesFactory.GetBanknotes(maxCountOfBanknotes); 
-            IsDefaultWithdraw = true;
+            // заполнение банкомата банкнотами через фабрику
+            banknotes = BanknoteFactory.GetBanknotes(maxCountOfBanknotes);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace CashMachineApp.Models
         /// <param name="banknote">банкнота для добавления</param>
         public void AddBanknote(Banknote banknote)
         {
-            Banknotes.Add(banknote);
+            banknotes.Add(banknote);
             OnPropertyChanged(nameof(CurrentCountOfBanknotes));
             OnPropertyChanged(nameof(CurrentState));
         }
@@ -48,7 +48,7 @@ namespace CashMachineApp.Models
         /// <param name="banknote">банкнота для удаления</param>
         public void RemoveBanknote(Banknote banknote)
         {
-            Banknotes.Remove(banknote);
+            banknotes.Remove(banknote);
             OnPropertyChanged(nameof(CurrentCountOfBanknotes));
             OnPropertyChanged(nameof(CurrentState));
         }

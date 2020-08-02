@@ -62,18 +62,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Interfaces\ICashMachine.cs" />
-    <Compile Include="Interfaces\IDepositCashService.cs" />
-    <Compile Include="Interfaces\IInfoFileService.cs" />
-    <Compile Include="Interfaces\IMessageService.cs" />
-    <Compile Include="Interfaces\IWithdrawCashService.cs" />
-    <Compile Include="Models\Banknote.cs" />
-    <Compile Include="Models\Factories\BanknotesFactory.cs" />
-    <Compile Include="Models\CashMachine.cs" />
-    <Compile Include="Models\DepositCash.cs" />
-    <Compile Include="Models\InfoFileReader.cs" />
-    <Compile Include="Models\MessageCaller.cs" />
-    <Compile Include="Models\WithdrawCash.cs" />
+    <Compile Include="Models\Abstractions\ICashMachine.cs" />
+    <Compile Include="Models\Abstractions\IDepositCashService.cs" />
+    <Compile Include="Models\Abstractions\IInfoFileService.cs" />
+    <Compile Include="Models\Abstractions\IMessageService.cs" />
+    <Compile Include="Models\Abstractions\IWithdrawCashService.cs" />
+    <Compile Include="Models\Implementations\Banknote.cs" />
+    <Compile Include="Models\Implementations\CashMachine.cs" />
+    <Compile Include="Models\Implementations\DepositCash.cs" />
+    <Compile Include="Models\Implementations\Factories\BanknoteFactory.cs" />
+    <Compile Include="Models\Implementations\InfoFileReader.cs" />
+    <Compile Include="Models\Implementations\MessageCaller.cs" />
+    <Compile Include="Models\Implementations\WithdrawCash.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\DepositCashViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
@@ -154,7 +154,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Resource Include="Views\Resources\Text\Info.txt" />
   </ItemGroup>
