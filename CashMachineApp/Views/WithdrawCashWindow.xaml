@@ -9,7 +9,7 @@
         Title="WithdrawCashWindow"   
         WindowStartupLocation="CenterOwner"
         Height="300" Width="300"
-        MaxHeight="310" MinHeight="310"
+        MaxHeight="330" MinHeight="330"
         MaxWidth="300" MinWidth="300">
     <Grid>
         <Grid.RowDefinitions>
@@ -109,9 +109,13 @@
                     Command="{Binding SetDenominationCommand}"
                     CommandParameter="0"/>
             </WrapPanel>
+
+            <TextBlock
+                Style="{StaticResource BaseTextBlockStyle}"
+                Text="{Binding StringFormat={}Selected denomination: {0}, Path=SelectedDenomination}"
+                Foreground="Green"/>
+
         </StackPanel>
-
-
 
         <!--Кнопка выдачи средств-->
         <Button

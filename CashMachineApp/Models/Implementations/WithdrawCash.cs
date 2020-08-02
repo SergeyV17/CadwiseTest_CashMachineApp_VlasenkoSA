@@ -95,9 +95,14 @@ namespace CashMachineApp.Models.Implementations
                     }
                 }
 
+                int index = Array.IndexOf(BanknoteTypes, listOfBanknotesToRemove[0]);
+
                 // Выдача средств
                 foreach (var banknote in listOfBanknotesToRemove)
+                {
                     cashMachine.RemoveBanknote(banknote);
+                    cashMachine.BanknotesCountOfEachType[index]--;
+                }
 
                 return true;
             }

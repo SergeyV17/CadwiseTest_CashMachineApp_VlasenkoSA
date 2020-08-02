@@ -28,6 +28,8 @@ namespace CashMachineApp.ViewModels
             this.withdrawCashService = WithdrawCashService;
 
             this.cashMachine = CashMachine;
+
+            SelectedDenomination = "default";
         }
 
         #region Команды меню выдачи средств
@@ -71,6 +73,7 @@ namespace CashMachineApp.ViewModels
                         messageService.ShowErrorMessage(WithdrawCashWindow, "ATM machine doesn't work with change");
 
                     cashMachine.ChangeWithdrawDenomination(0);
+                    SelectedDenomination = "default";
                 }));
             }
         }
@@ -109,6 +112,7 @@ namespace CashMachineApp.ViewModels
                         throw new System.Exception("Wrong denomination, check WithdrawCashWindow.xaml");
 
                     cashMachine.ChangeWithdrawDenomination(selectedDenominaton);
+                    SelectedDenomination = obj as string == "0" ? "default" : obj as string;
                 }));
             }
         }
@@ -125,6 +129,17 @@ namespace CashMachineApp.ViewModels
             {
                 withdrawAmount = value;
                 OnPropertyChanged(nameof(WithdrawAmount));
+            }
+        }
+
+        private string selectedDenomination; // Выбранный номинал на выдачу средств
+        public string SelectedDenomination
+        {
+            get { return selectedDenomination; }
+            set
+            {
+                selectedDenomination = value;
+                OnPropertyChanged(nameof(SelectedDenomination));
             }
         }
 
