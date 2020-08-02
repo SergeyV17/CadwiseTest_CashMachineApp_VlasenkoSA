@@ -12,27 +12,28 @@ namespace CashMachineApp.ViewModels
     /// </summary>
     class MainViewModel : ViewModelBase
     {
-        readonly IMessageService messageService; // сервис вызывающий сообщения для пользователя
-        readonly IInfoFileService infoFileService; // сервис работы с информационным файлом
+        private readonly IMessageService messageService; // сервис вызывающий сообщения для пользователя
+        private readonly IInfoFileService infoFileService; // сервис работы с информационным файлом
 
         private readonly MainWindow mainWindow; // главное окно
+
         private readonly ICashMachine cashMachine; // банкомат
 
-        public DepositCashViewModel depositCashViewModel { get; private set; } // модель представление для меню внесения средств
-        public WithDrawCashViewModel withdrawCashViewModel { get; private set; } // модель представление для меню выдачи средств
+        private readonly DepositCashViewModel depositCashViewModel; // модель представление для меню внесения средств
+        private readonly WithDrawCashViewModel withdrawCashViewModel; // модель представление для меню выдачи средств
 
         /// <summary>
         /// Конструктор модели представления для главного окна
         /// </summary>
-        /// <param name="MainWindow">главное окно</param>
+        /// <param name="mainWindow">главное окно</param>
         /// <param name="MessageService">сервис сообщений</param>
         /// <param name="InfoFileService">сервис открытия файла информации</param>
         /// <param name="DepositCashService">сервис внесения средств</param>
         /// <param name="WithdrawCashService">сервис выдачи средств</param>
-        public MainViewModel(MainWindow MainWindow, 
+        public MainViewModel(MainWindow mainWindow, 
             IMessageService MessageService, IInfoFileService InfoFileService, IDepositCashService DepositCashService, IWithdrawCashService WithdrawCashService)
         {
-            this.mainWindow = MainWindow;
+            this.mainWindow = mainWindow;
             this.infoFileService = InfoFileService;
             this.messageService = MessageService;
 
@@ -97,7 +98,6 @@ namespace CashMachineApp.ViewModels
                 (openDepositCashMenuCommand = new RelayCommand(obj =>
                 {
                     var depositCashWindow = new DepositCashWindow() { Owner = mainWindow , DataContext = depositCashViewModel};
-
                     depositCashViewModel.DepositCashWindow = depositCashWindow;
 
                     depositCashWindow.ShowDialog();
@@ -121,7 +121,6 @@ namespace CashMachineApp.ViewModels
                     var withdrawCashWindow = new WithdrawCashWindow() { Owner = mainWindow, DataContext = withdrawCashViewModel };
 
                     withdrawCashViewModel.WithdrawCashWindow = withdrawCashWindow;
-                    //CashMachine.IsDefaultWithdraw = true;
 
                     withdrawCashWindow.ShowDialog();
                     StatusPropertyChanged();

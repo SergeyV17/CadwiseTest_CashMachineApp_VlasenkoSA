@@ -6,6 +6,7 @@
         xmlns:conv="clr-namespace:CashMachineApp.Views.Converters"
         mc:Ignorable="d"
         Title="ATM"
+        WindowStartupLocation="CenterScreen"
         Height="350" Width="500"
         MinHeight="350" MinWidth="500"
         MaxHeight="350" MaxWidth="500">

@@ -13,7 +13,8 @@ namespace CashMachineApp.Models.Abstractions
         void RemoveBanknote(Banknote banknote); // Метод удаления банкноты
 
         bool State { get; } // Текущее состояние банкомата
-        int Balance { get; }
+
+        int[] BanknotesCountOfEachType { get; } // массив количества банкнот каждого номинала
 
         int MaxCountOfBanknotes { get; } // Максимальное количество хранимых банкнот
         int CurrentCountOfBanknotes { get; } // Текущее количество хранимых банкнот

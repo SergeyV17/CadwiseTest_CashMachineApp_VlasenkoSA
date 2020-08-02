@@ -6,7 +6,8 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:CashMachineApp.Views.Validation"
         mc:Ignorable="d"
-        Title="DepositCashWindow"      
+        Title="DepositCashWindow"
+        WindowStartupLocation="CenterOwner"
         Height="200" Width="250"
         MaxHeight="200" MinHeight="200"
         MaxWidth="250" MinWidth="250">
@@ -39,7 +40,7 @@
                 <!--Текст бокс для ввода-->
                 <TextBox
                     x:Name="DepositAmountTxtBx"
-                    Text="{Binding DepositAmount, Mode=TwoWay}"
+                    Text="{Binding DepositAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource BaseTextBoxStyle}">
                     <i:Interaction.Behaviors>
                         <local:TextBoxValidationBehavior/>

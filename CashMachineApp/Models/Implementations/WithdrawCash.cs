@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CashMachineApp.Models.Abstractions;
-using CashMachineApp.Models.Implementations.Factories;
+using static CashMachineApp.Models.Implementations.Factories.BanknoteFactory;
 
 namespace CashMachineApp.Models.Implementations
 {
@@ -44,13 +45,10 @@ namespace CashMachineApp.Models.Implementations
         /// <returns>признак успешной операции</returns>
         public bool DefaultWithdraw(ICashMachine cashMachine)    
         {
-            if (cashMachine.Balance < WithdrawAmount)
-                return true;
-
-            // Имеющиеся в банкомате номиналы банкнот
-            IList<Banknote> availableDenominations = GetAvailableDenominations(cashMachine.Banknotes);
-
-            IList<Banknote> tempBanknotes = BanknoteFactory.GetBanknotesByAmounOfCash(cashMachine.Banknotes.ToList(), WithdrawAmount, availableDenominations);
+            IList<Banknote> tempBanknotes = CalculateBanknotes.WithdrawBanknotesByAmounOfCash(
+                WithdrawAmount, 
+                cashMachine.BanknotesCountOfEachType, 
+                out int[] banknotesAmountClone);
 
             if (tempBanknotes != null)
             {
@@ -58,36 +56,13 @@ namespace CashMachineApp.Models.Implementations
                 foreach (var banknote in tempBanknotes)
                     cashMachine.RemoveBanknote(banknote);
 
-                return false;
-            }
+                // Замена массива с количеством банкнот каждого номинала на обработанный массив после операции выдачи
+                Array.Copy(banknotesAmountClone, cashMachine.BanknotesCountOfEachType, BanknoteTypes.Length);
 
                 return true;
-
-            // 500 100 100 100
-            // Снять 400
-            // Работаем с отфильтрованным списком и где банкноты меньше или равны 400
-            // Если сумма всех банкнот больше чем сумма выдачи, то выдаем, иначе не хватает средств
-
-            // 500 500 500
-            // 600
-            // 
-        }
-
-        private IList<Banknote> GetAvailableDenominations(IReadOnlyCollection<Banknote> currentBanknotes)
-        {
-            IList<Banknote> filteredBanknotes = new List<Banknote>();
-
-            foreach (var banknote in currentBanknotes)
-            {
-                if (!filteredBanknotes.Contains(banknote))
-                    filteredBanknotes.Add(banknote);
-
-                // Если в коллекции пристуствуют все имеющиеся номиналы, прервать цикл
-                if (filteredBanknotes.Count == BanknoteFactory.NumbersOfBanknoteTypes)
-                    break;
             }
 
-            return filteredBanknotes.OrderByDescending(d => d).ToList();
+                return false;
         }
 
         /// <summary>
@@ -101,17 +76,15 @@ namespace CashMachineApp.Models.Implementations
             // Общая сумма наличных имеющихся банкот выбранного номинала
             int amountOfCurrentBanknotes = banknoteDenomination * cashMachine.Banknotes.Count(banknote => banknote.Denomination == banknoteDenomination);
 
-            // Если общая сумма наличных меньше чем заданная сумма выдачи, то выдать заданную сумму невозможно
-            if (amountOfCurrentBanknotes < WithdrawAmount)
-                return true;
-            else
+            // Если заданная сумма меньше общей суммы наличных выбранного номинала, произвести выдачу
+            if (WithdrawAmount <= amountOfCurrentBanknotes)
             {
                 List<Banknote> listOfBanknotesToRemove = new List<Banknote>();
 
                 // Цикл добавления банкнот в временную коллекцию
                 foreach (var banknote in cashMachine.Banknotes)
                 {
-                    // Если сумма выдачи стала равна 0, выйти из цикла
+                    // Если сумма выдачи равна 0, выйти из цикла
                     if (WithdrawAmount == 0)
                         break;
 
@@ -126,11 +99,10 @@ namespace CashMachineApp.Models.Implementations
                 foreach (var banknote in listOfBanknotesToRemove)
                     cashMachine.RemoveBanknote(banknote);
 
-                // Возврат банкомата к режиму выдачи средств по умолчанию
-                //cashMachine.IsDefaultWithdraw = true;
-
-                return false;
+                return true;
             }
+
+            return false;
         }
     }
 }

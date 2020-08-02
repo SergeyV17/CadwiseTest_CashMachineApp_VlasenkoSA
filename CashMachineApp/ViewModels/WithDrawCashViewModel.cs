@@ -14,7 +14,7 @@ namespace CashMachineApp.ViewModels
         private readonly IMessageService messageService; // сервис вызывающий сообщения для пользователя
 
         readonly ICashMachine cashMachine; // банкомат
-        public WithdrawCashWindow WithdrawCashWindow { get; set; } // окно выдачи средств
+        internal WithdrawCashWindow WithdrawCashWindow { get; set; } // окно выдачи средств
 
         /// <summary>
         /// Конструктор модели представления для меню выдачи средств
@@ -30,7 +30,7 @@ namespace CashMachineApp.ViewModels
             this.cashMachine = CashMachine;
         }
 
-        #region Команды меню взноса средств
+        #region Команды меню выдачи средств
 
         /// <summary>
         /// Команда выдачи средств из банкомата
@@ -50,18 +50,8 @@ namespace CashMachineApp.ViewModels
                     {
                         if (cashMachine.IsDefaultWithdraw)
                         {
-                            bool notEnoughBanknotes = withdrawCashService.DefaultWithdraw(cashMachine);
-
-                            // Проверка на хранение в банкомате достаточно количества банкнот для выдачи
-                            if (notEnoughBanknotes)
-                                messageService.ShowErrorMessage(WithdrawCashWindow, "There are not enough banknotes in the ATM to issue");
-                            else
-                            {
-                                messageService.ShowInfoMessage(WithdrawCashWindow, "Funds withdrawn successfully");
-                                WithdrawCashWindow.Close();
-
-                                cashMachine.ChangeWithdrawDenomination(0);
-                            }
+                            bool enoughBanknotes = withdrawCashService.DefaultWithdraw(cashMachine);
+                            ConditionCheckAction(enoughBanknotes);
                         }
                         else
                         {
@@ -70,18 +60,8 @@ namespace CashMachineApp.ViewModels
                             // Проверка на корректную выдачу (заданная сумма должна быть кратна выбранному номиналу)
                             if (checkForCorrectWithdraw)
                             {
-                                bool notEnoughBanknotes = withdrawCashService.SelectedDenominationWithdraw(cashMachine, cashMachine.SelectedWithdrawDenomination);
-
-                                // Проверка на хранение в банкомате достаточно количества банкнот для выдачи
-                                if (notEnoughBanknotes)
-                                    messageService.ShowErrorMessage(WithdrawCashWindow, "There are not enough banknotes in the ATM to issue");
-                                else
-                                {
-                                    messageService.ShowInfoMessage(WithdrawCashWindow, "Funds withdrawn successfully");
-                                    WithdrawCashWindow.Close();
-
-                                    cashMachine.ChangeWithdrawDenomination(0);
-                                }
+                                bool enoughBanknotes = withdrawCashService.SelectedDenominationWithdraw(cashMachine, cashMachine.SelectedWithdrawDenomination);
+                                ConditionCheckAction(enoughBanknotes);
                             }
                             else
                                 messageService.ShowErrorMessage(WithdrawCashWindow, $"The withdraw amount: {WithdrawAmount} cannot be dispensed by: {cashMachine.SelectedWithdrawDenomination} p");
@@ -89,8 +69,27 @@ namespace CashMachineApp.ViewModels
                     }
                     else
                         messageService.ShowErrorMessage(WithdrawCashWindow, "ATM machine doesn't work with change");
+
+                    cashMachine.ChangeWithdrawDenomination(0);
                 }));
             }
+        }
+
+        /// <summary>
+        /// Метод обрабатывающий логику проверки на достаточное количество банкнот для выдачи
+        /// </summary>
+        /// <param name="enoughBanknotes">достаточно ли банкнот в банкномате</param>
+        private void ConditionCheckAction(bool enoughBanknotes)
+        {
+            // Проверка на хранение в банкомате достаточно количества банкнот для выдачи
+            if (enoughBanknotes)
+            {
+                messageService.ShowInfoMessage(WithdrawCashWindow, "Funds withdrawn successfully");
+                WithdrawCashWindow.Close();
+            }
+            else
+                messageService.ShowErrorMessage(WithdrawCashWindow, "There are not enough banknotes in the ATM to issue");
+
         }
 
         /// <summary>

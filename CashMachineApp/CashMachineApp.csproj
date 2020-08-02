@@ -68,6 +68,7 @@
     <Compile Include="Models\Abstractions\IMessageService.cs" />
     <Compile Include="Models\Abstractions\IWithdrawCashService.cs" />
     <Compile Include="Models\Implementations\Banknote.cs" />
+    <Compile Include="Models\Implementations\CalculateBanknotes.cs" />
     <Compile Include="Models\Implementations\CashMachine.cs" />
     <Compile Include="Models\Implementations\DepositCash.cs" />
     <Compile Include="Models\Implementations\Factories\BanknoteFactory.cs" />

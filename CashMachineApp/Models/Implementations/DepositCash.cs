@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using CashMachineApp.Models.Abstractions;
-using CashMachineApp.Models.Implementations.Factories;
 
 namespace CashMachineApp.Models.Implementations
 {
@@ -32,19 +30,19 @@ namespace CashMachineApp.Models.Implementations
         public bool DepositFundsToCashMachine(ICashMachine cashMachine)
         {
             // Временный список банкнот
-            IList<Banknote> tempListOfBanknotes = BanknoteFactory.GetBanknotesByAmounOfCash(cashMachine.Banknotes.ToList(), DepositAmount, cashMachine.Banknotes.ToList());
+            IList<Banknote> tempListOfBanknotes = CalculateBanknotes.DepositBanknotesByAmounOfCash(DepositAmount, cashMachine.BanknotesCountOfEachType);
 
             // Проверка: хватит ли места для банкнот в банкомате после внесения средств
-            if (cashMachine.CurrentCountOfBanknotes + tempListOfBanknotes.Count > cashMachine.MaxCountOfBanknotes)
-                return true;
-            else
+            if (cashMachine.CurrentCountOfBanknotes + tempListOfBanknotes.Count < cashMachine.MaxCountOfBanknotes)
             {
                 // Внесение средств
                 foreach (var banknote in tempListOfBanknotes)
                     cashMachine.AddBanknote(banknote);
 
-                return false;
+                return true;    
             }
+
+            return false;
         }
     }
 }

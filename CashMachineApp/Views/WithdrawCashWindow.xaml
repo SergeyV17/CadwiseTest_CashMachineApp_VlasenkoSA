@@ -6,9 +6,10 @@
         xmlns:local="clr-namespace:CashMachineApp.Views.Validation"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="WithdrawCashWindow"      
+        Title="WithdrawCashWindow"   
+        WindowStartupLocation="CenterOwner"
         Height="300" Width="300"
-        MaxHeight="300" MinHeight="300"
+        MaxHeight="310" MinHeight="310"
         MaxWidth="300" MinWidth="300">
     <Grid>
         <Grid.RowDefinitions>
@@ -39,7 +40,7 @@
                 <!--Текст бокс для ввода-->
                 <TextBox
                     Name="WithdrawAmountTxtBx"
-                    Text="{Binding WithdrawAmount, Mode=TwoWay}"
+                    Text="{Binding WithdrawAmount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource BaseTextBoxStyle}">
                     <i:Interaction.Behaviors>
                         <local:TextBoxValidationBehavior/>
@@ -102,6 +103,11 @@
                     Margin="10 10 0 0"
                     Command="{Binding SetDenominationCommand}"
                     CommandParameter="5000"/>
+                <Button
+                    Content="Default"
+                    Margin="10 10 0 0"
+                    Command="{Binding SetDenominationCommand}"
+                    CommandParameter="0"/>
             </WrapPanel>
         </StackPanel>
 

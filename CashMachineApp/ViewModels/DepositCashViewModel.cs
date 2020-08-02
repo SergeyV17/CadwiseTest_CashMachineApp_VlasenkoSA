@@ -14,7 +14,7 @@ namespace CashMachineApp.ViewModels
         readonly IMessageService messageService; // сервис вызывающий сообщения для пользователя
 
         readonly ICashMachine cashMachine; // банкомат
-        public DepositCashWindow DepositCashWindow { get; set; } // окно меню внесения средств
+        internal DepositCashWindow DepositCashWindow { get; set; } // окно меню внесения средств
 
         /// <summary>
         /// Конструктор модели представления
@@ -52,12 +52,12 @@ namespace CashMachineApp.ViewModels
 
                         // Проверка на переполнение банкомата
                         if (cashMachineIsOverflow)
-                            messageService.ShowErrorMessage(DepositCashWindow, "ATM cannot accept the specified amount due to overflow");
-                        else
                         {
                             messageService.ShowInfoMessage(DepositCashWindow, "Funds deposited successfully");
                             DepositCashWindow.Close();
                         }
+                        else
+                            messageService.ShowErrorMessage(DepositCashWindow, "ATM cannot accept the specified amount due to overflow");
                     }
                     else
                         messageService.ShowErrorMessage(DepositCashWindow, "ATM machine doesn't work with change");
